@@ -1,14 +1,14 @@
 index:
     path: /
-    controller: App\Controller\PostController::index
     methods: GET
+    controller: App\Controller\PostController::index
 
 add_post:
     path: /post/publish
-    controller: App\Controller\PostController::publishPost
     methods: POST
+    controller: App\Controller\PostController::publishPost
 
 show_post:
     path: /post/{postId}
-    controller: App\Controller\PostController::viewPost
     methods: GET
+    controller: App\Controller\PostController::viewPost

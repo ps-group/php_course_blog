@@ -36,7 +36,11 @@ class PostController extends AbstractController
         );
         $postId = $this->postTable->add($post);
 
-        return $this->redirectToRoute('show_post', ['postId' => $postId], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute(
+            'show_post',
+            ['postId' => $postId],
+            Response::HTTP_SEE_OTHER
+        );
     }
 
     public function viewPost(int $postId): Response
