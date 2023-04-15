@@ -46,8 +46,7 @@ class PostController extends AbstractController
     public function viewPost(int $postId): Response
     {
         $post = $this->postTable->find($postId);
-        if (!$post)
-        {
+        if (!$post) {
             throw $this->createNotFoundException();
         }
 
@@ -55,5 +54,12 @@ class PostController extends AbstractController
             'post' => $post
         ]);
         return new Response($contents);
+    }
+
+    public function deletePost(int $postId): Response
+    {
+        $this->postTable->delete($postId);
+
+        return $this->redirectToRoute('index');
     }
 }

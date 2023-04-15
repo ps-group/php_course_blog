@@ -12,3 +12,8 @@ show_post:
     path: /post/{postId}
     methods: GET
     controller: App\Controller\PostController::viewPost
+
+delete_post:
+    path: /post/{postId}/delete
+    methods: POST
+    controller: App\Controller\PostController::deletePost

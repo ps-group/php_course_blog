@@ -58,6 +58,18 @@ class PostTable
         return (int)$this->connection->lastInsertId();
     }
 
+    public function delete(int $postId): void
+    {
+        $query = <<<SQL
+        DELETE FROM post WHERE id = :post_id
+        SQL;
+
+        $statement = $this->connection->prepare($query);
+        $statement->execute([
+            ':post_id' => $postId
+        ]);
+    }
+
     private function createPostFromRow(array $row): Post
     {
         return new Post(
