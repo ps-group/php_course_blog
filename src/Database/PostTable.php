@@ -70,6 +70,32 @@ class PostTable
         ]);
     }
 
+    /**
+     * @return Post[]
+     */
+    public function list(): array
+    {
+        $query = <<<SQL
+        SELECT
+            id,
+            title,
+            subtitle,
+            content,
+            posted_at
+        FROM post
+        SQL;
+
+        $statement = $this->connection->query($query);
+
+        $posts = [];
+        while ($row = $statement->fetch(\PDO::FETCH_ASSOC))
+        {
+            $posts[] = $this->createPostFromRow($row);
+        }
+
+        return $posts;
+    }
+
     private function createPostFromRow(array $row): Post
     {
         return new Post(
