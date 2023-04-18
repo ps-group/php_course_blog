@@ -1,0 +1,9 @@
+<div class="posts-list-item">
+    <h2 class="posts-list-item-title">{{ post.title }}</h2>
+    {% if post.subtitle %}
+        <h3 class="posts-list-item-subtitle">{{ post.subtitle }}</h3>
+    {% endif %}
+    <p>{{ post.content }}</p>
+    <p class="posts-list-item-posted-at">Опубликовано {{ post.posted_at }} самым лучшим автором</p>
+    <a href="{{ path('show_post', {postId: post.id}) }}">Читать далее</a>
+</div>

@@ -10,24 +10,8 @@
     {% endblock %}
 </head>
 <body>
-<div class="menu">
-    <div class="menu-item">
-        <a href="{{ path('index') }}">
-            <img src="{{ absolute_url(asset('images/logo.png')) }}" height="20px" alt="Logo!"/>
-        </a>
-    </div>
-    <div class="menu-item">
-        <a href="{{ path('list_posts') }}">Список постов</a>
-    </div>
-    <div class="menu-item">
-        <a href="{{ path('index') }}">Новый пост</a>
-    </div>
-</div>
+{% include 'menu.html.twig' %}
 <div class="base-content">{% block content %}{% endblock %}</div>
-<div class="footer">
-    {% block footer %}
-        &copy; Copyright 2023 by <a href="https://www.ispring.ru/">iSpring Team</a>.
-    {% endblock %}
-</div>
+{% include 'footer.html.twig' %}
 </body>
 </html>
