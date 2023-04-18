@@ -46,7 +46,8 @@ class PostController extends AbstractController
     public function viewPost(int $postId): Response
     {
         $post = $this->postTable->find($postId);
-        if (!$post) {
+        if (!$post)
+        {
             throw $this->createNotFoundException();
         }
 
@@ -61,5 +62,17 @@ class PostController extends AbstractController
         $this->postTable->delete($postId);
 
         return $this->redirectToRoute('index');
+    }
+
+    public function listPosts(): Response
+    {
+        return $this->render('post/list.html.twig', [
+            'posts_list_count' => 3,
+            'post_names_list' => [
+                'post one',
+                'post two',
+                'post three',
+            ]
+        ]);
     }
 }

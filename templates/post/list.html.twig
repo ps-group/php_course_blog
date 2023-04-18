@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Posts list</title>
+</head>
+<body>
+<h1>Count of posts {{ posts_list_count }}!</h1>
+<ul>
+    {% for post_name in post_names_list %}
+        <li>
+            {{ post_name }}
+        </li>
+    {% endfor %}
+</ul>
+</body>
+</html>
