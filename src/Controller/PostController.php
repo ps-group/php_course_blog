@@ -66,13 +66,23 @@ class PostController extends AbstractController
 
     public function listPosts(): Response
     {
+        $posts = $this->postTable->list();
+
+        $postsView = [];
+
+        foreach ($posts as $post)
+        {
+            $postsView[] = [
+                'id' => $post->getId(),
+                'title' => $post->getTitle(),
+                'subtitle' => $post->getSubtitle(),
+                'content' => $post->getContent(),
+                'posted_at' => $post->getPostedAt(),
+            ];
+        }
+
         return $this->render('post/list.html.twig', [
-            'posts_list_count' => 3,
-            'post_names_list' => [
-                'post one',
-                'post two',
-                'post three',
-            ]
+            'posts_list' => $postsView
         ]);
     }
 }

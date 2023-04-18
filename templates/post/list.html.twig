@@ -4,11 +4,11 @@
     <title>Posts list</title>
 </head>
 <body>
-<h1>Count of posts {{ posts_list_count }}!</h1>
+<h1>Count of posts {{ posts_list|length }}!</h1>
 <ul>
-    {% for post_name in post_names_list %}
+    {% for post in posts_list %}
         <li>
-            {{ post_name }}
+            <a href="{{ path('show_post', {postId: post.id}) }}">{{ post.title }}</a>
         </li>
     {% endfor %}
 </ul>
