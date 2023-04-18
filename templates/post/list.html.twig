@@ -1,16 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Posts list</title>
-</head>
-<body>
-<h1>Count of posts {{ posts_list|length }}!</h1>
-<ul>
-    {% for post in posts_list %}
-        <li>
-            <a href="{{ path('show_post', {postId: post.id}) }}">{{ post.title }}</a>
-        </li>
-    {% endfor %}
-</ul>
-</body>
-</html>
+{% extends "base.html.twig" %}
+
+{% block title %}Posts list{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        a {
+            color: #00FF00;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Count of posts {{ posts_list|length }}!</h1>
+    <ul>
+        {% for post in posts_list %}
+            <li>
+                <a href="{{ path('show_post', {postId: post.id}) }}">{{ post.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
