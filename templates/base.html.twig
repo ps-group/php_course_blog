@@ -12,7 +12,12 @@
 <body>
 <div class="menu">
     <div class="menu-item">
-        <a href="{{ path('list_posts')}}">Список постов</a>
+        <a href="{{ path('index') }}">
+            <img src="{{ absolute_url(asset('images/logo.png')) }}" height="20px" alt="Logo!"/>
+        </a>
+    </div>
+    <div class="menu-item">
+        <a href="{{ path('list_posts') }}">Список постов</a>
     </div>
     <div class="menu-item">
         <a href="{{ path('index') }}">Новый пост</a>
