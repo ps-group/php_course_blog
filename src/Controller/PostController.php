@@ -77,7 +77,7 @@ class PostController extends AbstractController
                 'title' => $post->getTitle(),
                 'subtitle' => $post->getSubtitle(),
                 'content' => $post->getContent(),
-                'posted_at' => $post->getPostedAt(),
+                'posted_at' => $post->getPostedAt()->format('Y-m-d'),
             ];
         }
 

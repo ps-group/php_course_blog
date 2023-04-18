@@ -1,0 +1,25 @@
+.posts-list {
+    padding: 20px;
+}
+
+.posts-list-title {
+    text-align: center;
+    width: 100%;
+}
+
+.posts-list-item {
+    padding: 20px 0;
+}
+
+.posts-list-item-title {
+    padding-bottom: 10px;
+}
+
+.posts-list-item-subtitle {
+    padding-bottom: 8px;
+}
+
+.posts-list-item-posted-at {
+    padding: 6px 0;
+    text-align: right;
+}

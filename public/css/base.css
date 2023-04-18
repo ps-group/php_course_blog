@@ -1,0 +1,39 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: #E7E9EB;
+}
+
+.base-content {
+    margin: 20px auto;
+    width: 1000px;
+    background: #FFFFFF;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 50px;
+    width: 100%;
+    background: #FFFFFF;
+    padding: 20px;
+}
+
+.menu {
+    width: 100%;
+    padding: 20px;
+    background: aqua;
+    height: 40px;
+}
+
+.menu-item {
+    float: left;
+    width: 200px;
+    text-align: center;
+    padding: 10px;
+    background: bisque;
+    margin-right: 20px;
+}

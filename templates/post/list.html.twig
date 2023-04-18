@@ -3,19 +3,21 @@
 {% block title %}Posts list{% endblock %}
 {% block head %}
     {{ parent() }}
-    <style type="text/css">
-        a {
-            color: #00FF00;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/posts_list.css"/>
 {% endblock %}
 {% block content %}
-    <h1>Count of posts {{ posts_list|length }}!</h1>
-    <ul>
+    <h1 class="posts-list-title">Count of posts {{ posts_list|length }}!</h1>
+    <div class="posts-list">
         {% for post in posts_list %}
-            <li>
-                <a href="{{ path('show_post', {postId: post.id}) }}">{{ post.title }}</a>
-            </li>
+            <div class="posts-list-item">
+                <h2 class="posts-list-item-title">{{ post.title }}</h2>
+                {% if post.subtitle %}
+                    <h3 class="posts-list-item-subtitle">{{ post.subtitle }}</h3>
+                {% endif %}
+                <p>{{ post.content }}</p>
+                <p class="posts-list-item-posted-at">Опубликовано {{ post.posted_at }} самым лучшим автором</p>
+                <a href="{{ path('show_post', {postId: post.id}) }}">Читать далее</a>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
