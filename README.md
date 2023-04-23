@@ -14,4 +14,4 @@ php -S localhost:8000 -t public/
 
 ## Запуск примера в Ubuntu Linux
 
-Используйте Docker для запуска в Windows. Подробности в файле `docs/docker.md`.
+Используйте Docker для запуска на Linux. Подробности в файле `docs/docker.md`.
