@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Database\ConnectionProvider;
-use App\Database\PostTable;
-use App\Model\Post;
+use App\Infrastructure\Doctrine\EntityManagerProvider;
+use App\Infrastructure\MySQL\ConnectionProvider;
+use App\Infrastructure\MySQL\PostTable;
+use App\Entity\Post;
+use App\Repository\PostRepository;
 use App\View\PhpTemplateEngine;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,11 +15,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends AbstractController
 {
+    // TODO удалить, полностью заменив на PostRepository
     private PostTable $postTable;
 
-    public function __construct()
+    private PostRepository $postRepository;
+
+    public function __construct(PostRepository $postRepository)
     {
-        $this->postTable = new PostTable(ConnectionProvider::connectDatabase());
+        $this->postTable = new PostTable(ConnectionProvider::getConnection());
+        $this->postRepository = $postRepository;
     }
 
     public function index(): Response
@@ -34,7 +40,7 @@ class PostController extends AbstractController
             $request->get('subtitle'),
             $request->get('content'),
         );
-        $postId = $this->postTable->add($post);
+        $postId = $this->postRepository->store($post);
 
         return $this->redirectToRoute(
             'show_post',

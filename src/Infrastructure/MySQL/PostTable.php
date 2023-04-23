@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Database;
+namespace App\Infrastructure\MySQL;
 
-use App\Model\Post;
+use App\Entity\Post;
 
+// TODO удалить, полностью заменив на PostRepository
 class PostTable
 {
     private const MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
@@ -43,19 +44,7 @@ class PostTable
     // Сохраняет пост в таблицу post, возвращает ID поста.
     public function add(Post $post): int
     {
-        $query = <<<SQL
-        INSERT INTO post (title, subtitle, content)
-        VALUES (:title, :subtitle, :content)
-        SQL;
-
-        $statement = $this->connection->prepare($query);
-        $statement->execute([
-            ':title' => $post->getTitle(),
-            ':subtitle' => $post->getSubtitle(),
-            ':content' => $post->getContent()
-        ]);
-
-        return (int)$this->connection->lastInsertId();
+        throw new \RuntimeException('Not implemented');
     }
 
     public function delete(int $postId): void

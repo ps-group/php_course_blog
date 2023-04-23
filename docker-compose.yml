@@ -9,9 +9,7 @@ services:
     environment:
       # Параметры приложения
       - APP_ENV=dev
-      - APP_DATABASE_DSN=mysql:dbname=php_course;host=php-course-db
-      - APP_DATABASE_USER=php-course-app
-      - APP_DATABASE_PASSWORD=gX5t2UUbBn
+      - APP_DATABASE_DSN=pdo-mysql://php-course-app:gX5t2UUbBn@php-course-db/php_course
       # Параметры скрипта docker-entrypoint
       - USER_ID=${USER_ID:-1000}
       - USER_NAME=$USER

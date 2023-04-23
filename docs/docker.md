@@ -60,3 +60,11 @@ docker volume rm php_course_blog_php_course_db_data
     - Firefox: https://addons.mozilla.org/en-US/firefox/addon/xdebug-helper-for-firefox/
 3. В своей IDE настройте работу с XDebug, используя любую инструкцию для docker-контейнеров
     - Для PhpStorm раздел "PHP > Servers" уже настроен как полагается
+
+### Работа с composer
+
+Можно запускать composer через контейнер, если локально его нет, или нет php 8.1:
+
+```
+docker run --rm -it --volume $(pwd):/app prooph/composer:8.1 install
+```
