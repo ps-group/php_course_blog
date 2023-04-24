@@ -13,6 +13,7 @@
         <field name="title" column="title" type="string" length="200" nullable="false" />
         <field name="subtitle" column="subtitle" type="string" length="200" nullable="false" />
         <field name="content" column="content" type="string" nullable="false" />
+        <field name="postedAt"  column="posted_at" type="datetime_immutable" nullable="true" />
 
     </entity>
 

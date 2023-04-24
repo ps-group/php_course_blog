@@ -5,20 +5,22 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 
 class PostRepository
 {
     private EntityManagerInterface $entityManager;
+    private EntityRepository $repository;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+        $this->repository = $entityManager->getRepository(Post::class);
     }
 
     public function findById(int $id): ?Post
     {
-        // TODO реализовать
-        throw new \RuntimeException('Not implemented');
+        return $this->repository->findOneBy(['id' => (string) $id]);
     }
 
     public function store(Post $post): int
@@ -28,18 +30,17 @@ class PostRepository
         return $post->getId();
     }
 
-    public function deleteById(int $postId): void
+    public function delete(Post $post): void
     {
-        // TODO реализовать
-        throw new \RuntimeException('Not implemented');
+        $this->entityManager->remove($post);
+        $this->entityManager->flush();
     }
 
     /**
      * @return Post[]
      */
-    public function list(): array
+    public function listAll(): array
     {
-        // TODO реализовать
-        throw new \RuntimeException('Not implemented');
+        return $this->repository->findAll();
     }
 }
