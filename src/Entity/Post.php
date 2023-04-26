@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Entity;
 
 class Post
 {
@@ -9,9 +9,9 @@ class Post
     private string $title;
     private string $subtitle;
     private string $content;
-    private ?\DateTimeImmutable $postedAt;
+    private \DateTimeImmutable $postedAt;
 
-    public function __construct(?int $id, string $title, string $subtitle, string $content, ?\DateTimeImmutable $postedAt = null)
+    public function __construct(?int $id, string $title, string $subtitle, string $content, \DateTimeImmutable $postedAt)
     {
         $this->id = $id;
         $this->title = $title;
@@ -40,7 +40,7 @@ class Post
         return $this->content;
     }
 
-    public function getPostedAt(): ?\DateTimeImmutable
+    public function getPostedAt(): \DateTimeImmutable
     {
         return $this->postedAt;
     }

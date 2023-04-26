@@ -1,6 +1,6 @@
 <?php
 /**
- * @var App\Model\Post $post
+ * @var App\Entity\Post $post
  */
 ?>
 

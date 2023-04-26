@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Database\ConnectionProvider;
-use App\Database\PostTable;
-use App\Model\Post;
+use App\Entity\Post;
+use App\Repository\PostRepository;
 use App\View\PhpTemplateEngine;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,11 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends AbstractController
 {
-    private PostTable $postTable;
+    private PostRepository $postRepository;
 
-    public function __construct()
+    public function __construct(PostRepository $postRepository)
     {
-        $this->postTable = new PostTable(ConnectionProvider::connectDatabase());
+        $this->postRepository = $postRepository;
     }
 
     public function index(): Response
@@ -33,8 +32,9 @@ class PostController extends AbstractController
             $request->get('title'),
             $request->get('subtitle'),
             $request->get('content'),
+            new \DateTimeImmutable(),
         );
-        $postId = $this->postTable->add($post);
+        $postId = $this->postRepository->store($post);
 
         return $this->redirectToRoute(
             'show_post',
@@ -45,8 +45,8 @@ class PostController extends AbstractController
 
     public function viewPost(int $postId): Response
     {
-        $post = $this->postTable->find($postId);
-        if (!$post)
+        $post = $this->postRepository->findById($postId);
+        if ($post === null)
         {
             throw $this->createNotFoundException();
         }
@@ -59,17 +59,22 @@ class PostController extends AbstractController
 
     public function deletePost(int $postId): Response
     {
-        $this->postTable->delete($postId);
+        $post = $this->postRepository->findById($postId);
+        if ($post === null)
+        {
+            throw $this->createNotFoundException();
+        }
 
-        return $this->redirectToRoute('index');
+        $this->postRepository->delete($post);
+
+        return $this->redirectToRoute('list_posts');
     }
 
     public function listPosts(): Response
     {
-        $posts = $this->postTable->list();
+        $posts = $this->postRepository->listAll();
 
         $postsView = [];
-
         foreach ($posts as $post)
         {
             $postsView[] = [
