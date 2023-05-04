@@ -30,6 +30,9 @@
         <p>
             <?= htmlentities($post->getContent()) ?>
         </p>
+        <p>
+            <img class="post-illustration" src="<?= htmlentities('uploads/' . $post->getImagePath()) ?>" alt='Иллюстрация'>
+        </p>
         <form action="<?= "/post/{$post->getId()}/delete" ?>" method="post">
             <button type="submit">Удалить пост</button>
         </form>

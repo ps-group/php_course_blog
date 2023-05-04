@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/css/add_post.css">
 </head>
 <body>
-<form action="/post/publish" method="post" class="add-post-form">
+<form action="/post/publish" method="post" class="add-post-form" enctype="multipart/form-data">
     <h2>Добавление поста</h2>
     <div class="form-row">
         <label for="title">Заголовок:</label>
@@ -18,6 +18,10 @@
     <div class="form-row">
         <label for="content">Содержание:</label>
         <textarea name="content" placeholder="Заголовок" id="content" required></textarea>
+    </div>
+    <div class="form-row">
+        <label for="image">Изображение:</label>
+        <input name="image" type="file" value="Изображение" accept="image/png,image/jpeg,image/gif"/><br/>
     </div>
     <div class="form-row">
         <button type="submit">Добавить пост</button>

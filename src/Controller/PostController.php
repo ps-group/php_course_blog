@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Repository\PostRepository;
+use App\Service\PostServiceInterface;
+use App\Service\ImageServiceInterface;
 use App\View\PhpTemplateEngine;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,11 +13,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends AbstractController
 {
-    private PostRepository $postRepository;
+    private PostServiceInterface $postService;
+    private ImageServiceInterface $imageService;
 
-    public function __construct(PostRepository $postRepository)
+    public function __construct(PostServiceInterface $postService, ImageServiceInterface $imageService)
     {
-        $this->postRepository = $postRepository;
+        $this->postService = $postService;
+        $this->imageService = $imageService;
     }
 
     public function index(): Response
@@ -27,14 +30,14 @@ class PostController extends AbstractController
 
     public function publishPost(Request $request): Response
     {
-        $post = new Post(
-            null,
+        $imagePath = (isset($_FILES['image'])) ? $this->imageService->moveImageToUploads($_FILES['image']) : null;        
+        
+        $postId = $this->postService->savePost(
             $request->get('title'),
             $request->get('subtitle'),
             $request->get('content'),
-            new \DateTimeImmutable(),
+            $imagePath,
         );
-        $postId = $this->postRepository->store($post);
 
         return $this->redirectToRoute(
             'show_post',
@@ -45,11 +48,7 @@ class PostController extends AbstractController
 
     public function viewPost(int $postId): Response
     {
-        $post = $this->postRepository->findById($postId);
-        if ($post === null)
-        {
-            throw $this->createNotFoundException();
-        }
+        $post = $this->postService->getPost($postId);
 
         $contents = PhpTemplateEngine::render('post.php', [
             'post' => $post
@@ -59,31 +58,18 @@ class PostController extends AbstractController
 
     public function deletePost(int $postId): Response
     {
-        $post = $this->postRepository->findById($postId);
-        if ($post === null)
-        {
-            throw $this->createNotFoundException();
-        }
-
-        $this->postRepository->delete($post);
+        $this->postService->deletePost($postId);
 
         return $this->redirectToRoute('list_posts');
     }
 
     public function listPosts(): Response
     {
-        $posts = $this->postRepository->listAll();
-
+        $posts = $this->postService->listPosts();
         $postsView = [];
         foreach ($posts as $post)
         {
-            $postsView[] = [
-                'id' => $post->getId(),
-                'title' => $post->getTitle(),
-                'subtitle' => $post->getSubtitle(),
-                'content' => $post->getContent(),
-                'posted_at' => $post->getPostedAt()->format('Y-m-d'),
-            ];
+            $postsView[] = $post->toArray();
         }
 
         return $this->render('post/list.html.twig', [

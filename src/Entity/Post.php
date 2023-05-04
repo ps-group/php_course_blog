@@ -9,14 +9,22 @@ class Post
     private string $title;
     private string $subtitle;
     private string $content;
+    private ?string $imagePath;
     private \DateTimeImmutable $postedAt;
 
-    public function __construct(?int $id, string $title, string $subtitle, string $content, \DateTimeImmutable $postedAt)
+    public function __construct(
+        ?int $id, 
+        string $title, 
+        string $subtitle, 
+        string $content, 
+        ?string $imagePath, 
+        \DateTimeImmutable $postedAt)
     {
         $this->id = $id;
         $this->title = $title;
         $this->subtitle = $subtitle;
         $this->content = $content;
+        $this->imagePath = $imagePath;
         $this->postedAt = $postedAt;
     }
 
@@ -43,5 +51,10 @@ class Post
     public function getPostedAt(): \DateTimeImmutable
     {
         return $this->postedAt;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
     }
 }
