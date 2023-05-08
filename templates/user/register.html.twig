@@ -1,0 +1,11 @@
+{% extends "unauthorized.html.twig" %}
+
+{% block title %}Sign up{% endblock %}
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    {% form_theme form 'bootstrap_5_layout.html.twig' %}
+    <h1 class="display-5 fw-bold mt-5 mb-5">Sign up</h1>
+    {{ form(form) }}
+{% endblock %}

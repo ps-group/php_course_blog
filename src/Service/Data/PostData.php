@@ -5,19 +5,23 @@ namespace App\Service\Data;
 
 class PostData
 {
-    private ?int $id;
+    private int $id;
     private string $title;
     private string $subtitle;
     private string $content;
     private ?string $imagePath;
+    private ?int $author;
+    private ?string $authorEmail;
     private \DateTimeImmutable $postedAt;
 
     public function __construct(
-        ?int $id, 
+        int $id,
         string $title, 
         string $subtitle, 
         string $content, 
         ?string $imagePath, 
+        ?int $author,
+        ?string $authorEmail,
         \DateTimeImmutable $postedAt)
     {
         $this->id = $id;
@@ -25,10 +29,12 @@ class PostData
         $this->subtitle = $subtitle;
         $this->content = $content;
         $this->imagePath = $imagePath;
+        $this->author = $author;
+        $this->authorEmail = $authorEmail;
         $this->postedAt = $postedAt;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -58,14 +64,13 @@ class PostData
         return $this->imagePath;
     }
 
-    public function toArray(): array
+    public function getAuthor(): ?int
     {
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'subtitle' => $this->getSubtitle(),
-            'content' => $this->getContent(),
-            'posted_at' => $this->getPostedAt()->format('Y-m-d'),
-        ];
+        return $this->author;
+    }
+
+    public function getAuthorEmail(): ?string
+    {
+        return $this->authorEmail;
     }
 }

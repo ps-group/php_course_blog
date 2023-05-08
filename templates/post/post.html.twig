@@ -1,0 +1,27 @@
+{% extends "authorized.html.twig" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div class="mt-5">
+        <h2>{{ post.title }}</h2>
+        {% if post.subtitle %}
+            <h3>{{ post.subtitle }}</h3>
+        {% endif %}
+        <p>{{ post.content }}</p>
+        <p>Опубликовано {{ post.posted_at|date("Y-m-d H:i:sP")  }} </p>
+        {% if post.author_email %}
+            <p>Автор {{ post.author_email }}</p>
+        {% endif %}
+        <p>
+            <img src="{{ ('/uploads/' ~ post.image) }}" alt='Иллюстрация'>
+        </p>
+        {% if canRemove %}
+            <form action="{{ path('delete_post', {postId: post.id}) }}" method="post">
+                <button type="submit" class="btn btn-primary">Удалить пост</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

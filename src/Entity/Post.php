@@ -10,6 +10,8 @@ class Post
     private string $subtitle;
     private string $content;
     private ?string $imagePath;
+    private ?Image $image;
+    private ?int $author;
     private \DateTimeImmutable $postedAt;
 
     public function __construct(
@@ -18,6 +20,7 @@ class Post
         string $subtitle, 
         string $content, 
         ?string $imagePath, 
+        ?int $author,
         \DateTimeImmutable $postedAt)
     {
         $this->id = $id;
@@ -25,6 +28,7 @@ class Post
         $this->subtitle = $subtitle;
         $this->content = $content;
         $this->imagePath = $imagePath;
+        $this->author = $author;
         $this->postedAt = $postedAt;
     }
 
@@ -56,5 +60,10 @@ class Post
     public function getImagePath(): ?string
     {
         return $this->imagePath;
+    }
+
+    public function getAuthor(): ?int
+    {
+        return $this->author;
     }
 }

@@ -4,19 +4,22 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Post;
+use App\Repository\UserRepository;
 use App\Service\Data\PostData;
 use App\Repository\PostRepository;
 
-class PostService implements PostServiceInterface
+class PostService
 {
     private PostRepository $postRepository;
+    private UserRepository $userRepository;
 
-    public function __construct(PostRepository $postRepository)
+    public function __construct(PostRepository $postRepository, UserRepository $userRepository)
     {
         $this->postRepository = $postRepository;
+        $this->userRepository = $userRepository;
     }
 
-    public function savePost(string $title, string $subtitle, string $content, ?string $imagePath): int
+    public function createPost(string $title, string $subtitle, string $content, ?string $imagePath, int $author): int
     {
         $post = new Post(
             null,
@@ -24,25 +27,30 @@ class PostService implements PostServiceInterface
             $subtitle,
             $content,
             $imagePath,
-            new \DateTimeImmutable(),
+            $author,
+            new \DateTimeImmutable()
         );
         return $this->postRepository->store($post);
     }
 
-    public function getPost(int $postId): PostData
+    public function getPost(int $postId): ?PostData
     {
         $post = $this->postRepository->findById($postId);
-        if ($post === null)
+        $author = $post->getAuthor();
+        $authorEmail = null;
+        if ($author !== null)
         {
-            throw $this->createNotFoundException();
+            $user = $this->userRepository->findById($author);
+            $authorEmail = $user ? $user->getEmail() : null;
         }
-
-        return new PostData(
+        return ($post === null) ? null : new PostData(
             $post->getId(),
             $post->getTitle(),
             $post->getSubtitle(),
             $post->getContent(),
             $post->getImagePath(),
+            $post->getAuthor(),
+            $authorEmail,
             $post->getPostedAt(),
         );
     }
@@ -52,7 +60,7 @@ class PostService implements PostServiceInterface
         $post = $this->postRepository->findById($postId);
         if ($post === null)
         {
-            throw $this->createNotFoundException();
+            return;
         }
 
         $this->postRepository->delete($post);
@@ -61,16 +69,34 @@ class PostService implements PostServiceInterface
     public function listPosts(): array
     {
         $posts = $this->postRepository->listAll();
+        $userIds = [];
+        foreach ($posts as $post)
+        {
+            if ($post->getAuthor() !== null)
+            {
+                $userIds[] = $post->getAuthor();
+            }
+        }
+        $users = $this->userRepository->listUsers($userIds);
+        $usersMap = [];
+        foreach ($users as $user)
+        {
+            $usersMap[$user->getId()] = $user;
+        }
 
         $postsView = [];
         foreach ($posts as $post)
         {
+            $user = $usersMap[$post->getAuthor()] ?? null;
+            $userEmail = $user ? $user->getEmail() : null;
             $postsView[] = new PostData(
                 $post->getId(),
                 $post->getTitle(),
                 $post->getSubtitle(),
                 $post->getContent(),
                 $post->getImagePath(),
+                $post->getAuthor(),
+                $userEmail,
                 $post->getPostedAt(),
             );
         }

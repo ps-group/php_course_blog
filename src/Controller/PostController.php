@@ -3,77 +3,129 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Post;
-use App\Service\PostServiceInterface;
-use App\Service\ImageServiceInterface;
-use App\View\PhpTemplateEngine;
+use App\Controller\Input\CreatePostInput;
+use App\Service\Data\PostData;
+use App\Service\PostService;
+use App\Service\ImageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends AbstractController
 {
-    private PostServiceInterface $postService;
-    private ImageServiceInterface $imageService;
+    private PostService $postService;
+    private ImageService $imageService;
 
-    public function __construct(PostServiceInterface $postService, ImageServiceInterface $imageService)
+    public function __construct(PostService $postService, ImageService $imageService)
     {
         $this->postService = $postService;
         $this->imageService = $imageService;
     }
 
-    public function index(): Response
+    public function create(): Response
     {
-        $contents = PhpTemplateEngine::render('add_post_form.php');
-        return new Response($contents);
+        $input = new CreatePostInput();
+        $form = $this->createForm(CreatePostInput::class, $input, [
+            'action' => $this->generateUrl('add_post'),
+        ]);
+
+        return $this->render('post/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     public function publishPost(Request $request): Response
     {
-        $imagePath = (isset($_FILES['image'])) ? $this->imageService->moveImageToUploads($_FILES['image']) : null;        
-        
-        $postId = $this->postService->savePost(
-            $request->get('title'),
-            $request->get('subtitle'),
-            $request->get('content'),
-            $imagePath,
-        );
+        $input = new CreatePostInput();
+        $form = $this->createForm(CreatePostInput::class, $input);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $imageData = $form->get('image')->getData();
+            $imagePath = null;
+            if ($imageData !== null)
+            {
+                $imagePath = $this->imageService->moveImageToUploads($imageData);
+            }
 
-        return $this->redirectToRoute(
-            'show_post',
-            ['postId' => $postId],
-            Response::HTTP_SEE_OTHER
-        );
+            $postId = $this->postService->createPost(
+                $input->getTitle(),
+                $input->getSubTitle(),
+                $input->getContent(),
+                $imagePath,
+                $this->getUser()->getId()
+            );
+
+            return $this->redirectToRoute(
+                'show_post',
+                ['postId' => $postId],
+                Response::HTTP_SEE_OTHER
+            );
+        }
+
+        return $this->redirectToRoute('index');
     }
 
     public function viewPost(int $postId): Response
     {
+        $user = $this->getUser();
         $post = $this->postService->getPost($postId);
-
-        $contents = PhpTemplateEngine::render('post.php', [
-            'post' => $post
+        if ($post === null)
+        {
+            throw $this->createNotFoundException();
+        }
+        return $this->render('post/post.html.twig', [
+            'canRemove' => $user->isAdmin() || $user->getId() === $post->getAuthor(),
+            'post' => $this->postDataToArray($post)
         ]);
-        return new Response($contents);
     }
 
     public function deletePost(int $postId): Response
     {
+        $user = $this->getUser();
+        $post = $this->postService->getPost($postId);
+        if ($post === null)
+        {
+            return $this->redirectToRoute('index');
+        }
+        if (!$user->isAdmin() && $post->getAuthor() !== $user->getId())
+        {
+            throw $this->createAccessDeniedException();
+        }
         $this->postService->deletePost($postId);
 
-        return $this->redirectToRoute('list_posts');
+        return $this->redirectToRoute('index');
     }
 
     public function listPosts(): Response
     {
         $posts = $this->postService->listPosts();
-        $postsView = [];
-        foreach ($posts as $post)
-        {
-            $postsView[] = $post->toArray();
-        }
-
         return $this->render('post/list.html.twig', [
-            'posts_list' => $postsView
+            'posts_list' => $this->postsToArray($posts)
         ]);
+    }
+
+    /**
+     * @param PostData[] $posts
+     * @return array
+     */
+    private function postsToArray(array $posts): array
+    {
+        return array_map(function (PostData $post): array {
+            return $this->postDataToArray($post);
+        }, $posts);
+    }
+
+    private function postDataToArray(PostData $post): array
+    {
+        return [
+            'id' => $post->getId(),
+            'title' => $post->getTitle(),
+            'subtitle' => $post->getSubtitle(),
+            'content' => $post->getContent(),
+            'image' => $post->getImagePath(),
+            'posted_at' => $post->getPostedAt()->format('Y-m-d'),
+            'author_email' => $post->getAuthorEmail(),
+        ];
     }
 }

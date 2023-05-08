@@ -4,22 +4,19 @@
                   xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Entity\Post" table="post">
+    <entity name="App\Entity\User" table="user">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
-
-        <field name="title" column="title" type="string" length="200" nullable="false" />
-        <field name="subtitle" column="subtitle" type="string" length="200" nullable="false" />
-        <field name="content" column="content" type="string" nullable="false" />
-        <field name="imagePath" column="image_path" type="string" length="200" nullable="true" />
+        <field name="email" column="email" type="string" length="200" />
+        <field name="firstName" column="first_name" type="string" length="200" />
+        <field name="lastName" column="last_name" type="string" length="200" />
+        <field name="password" column="password" type="string" length="200" />
+        <field name="role" column="role" type="integer" />
         <many-to-one field="image" target-entity="App\Entity\Image">
             <join-column name="image_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
-        <field name="author" column="author" type="integer" nullable="true" />
-        <field name="postedAt"  column="posted_at" type="datetime_immutable" nullable="true" />
-
     </entity>
 
 </doctrine-mapping>

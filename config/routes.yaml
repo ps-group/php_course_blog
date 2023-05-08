@@ -1,7 +1,29 @@
 index:
     path: /
     methods: GET
-    controller: App\Controller\PostController::index
+    controller: App\Controller\UserController::index
+
+signup:
+    path: /signup
+    controller: App\Controller\UserController::register
+
+login:
+    path: /signin
+    controller: App\Controller\SecurityController::login
+
+logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+home:
+    path: /home
+    methods: GET
+    controller: App\Controller\PostController::listPosts
+
+create_post:
+    path: /post/create
+    methods: GET
+    controller: App\Controller\PostController::create
 
 add_post:
     path: /post/publish
@@ -17,8 +39,3 @@ delete_post:
     path: /post/{postId}/delete
     methods: POST
     controller: App\Controller\PostController::deletePost
-
-list_posts:
-    path: /post/list/all
-    methods: GET
-    controller: App\Controller\PostController::listPosts

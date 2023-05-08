@@ -20,7 +20,7 @@ class PostRepository
 
     public function findById(int $id): ?Post
     {
-        return $this->repository->findOneBy(['id' => (string) $id]);
+        return $this->repository->find($id);
     }
 
     public function store(Post $post): int

@@ -1,9 +1,8 @@
-{% extends "base.html.twig" %}
+{% extends "authorized.html.twig" %}
 
 {% block title %}Posts list{% endblock %}
 {% block head %}
     {{ parent() }}
-    <link rel="stylesheet" href="/css/posts_list.css"/>
 {% endblock %}
 {% block content %}
     <h1 class="posts-list-title">Count of posts {{ posts_list|length }}!</h1>
