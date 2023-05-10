@@ -43,7 +43,6 @@ class UserServiceTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->assertEquals(0, $this->repository->getUsersCount());
         $this->service->register($input);
-        $this->assertEquals(0, $this->repository->getUsersCount());
     }
 
     public function testCanNotRegisterAlreadyExistingUser(): void
