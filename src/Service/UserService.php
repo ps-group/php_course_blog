@@ -3,23 +3,23 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Controller\Input\RegisterUserInput;
 use App\Entity\User;
 use App\Entity\UserRole;
-use App\Repository\UserRepository;
+use App\Repository\UserRepositoryInterface;
+use App\Service\Input\RegisterUserInputInterface;
 
 class UserService
 {
-    private UserRepository $repository;
+    private UserRepositoryInterface $repository;
     private PasswordHasher $passwordHasher;
 
-    public function __construct(UserRepository $postRepository, PasswordHasher $passwordHasher)
+    public function __construct(UserRepositoryInterface $postRepository, PasswordHasher $passwordHasher)
     {
         $this->repository = $postRepository;
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function register(RegisterUserInput $input): int
+    public function register(RegisterUserInputInterface $input): int
     {
         $existingUser = $this->repository->findByEmail($input->getEmail());
         if ($existingUser !== null)

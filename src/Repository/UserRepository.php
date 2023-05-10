@@ -7,7 +7,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     private EntityManagerInterface $entityManager;
     private EntityRepository $repository;
@@ -23,10 +23,6 @@ class UserRepository
         return $this->repository->find($id);
     }
 
-    /**
-     * @param int[] $ids
-     * @return User[]
-     */
     public function listUsers(array $ids): array
     {
         return $this->repository->findBy(['id' => $ids]);
